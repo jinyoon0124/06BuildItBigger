@@ -6,6 +6,7 @@ import android.util.Pair;
 import android.widget.Toast;
 
 import com.example.myapplication.backend.myApi.MyApi;
+//import com.example.myapplication.backend.jokeTellerApi.JokeTellerApi;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
@@ -16,12 +17,13 @@ import java.io.IOException;
 /**
  * Created by Jin Yoon on 8/26/2016.
  */
-class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
+class EndpointsAsyncTask extends AsyncTask<Pair<Context, Integer>, Void, String> {
+//    private static JokeTellerApi myApiService = null;
     private static MyApi myApiService = null;
     private Context context;
 
     @Override
-    protected String doInBackground(Pair<Context, String>... params) {
+    protected String doInBackground(Pair<Context, Integer>... params) {
         if(myApiService == null) {  // Only do this once
 //            MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
 //                    new AndroidJsonFactory(), null)
@@ -37,16 +39,22 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
 //                    });
             // end options for devappserver
 
+//            JokeTellerApi.Builder builder = new JokeTellerApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+//                    .setRootUrl("https://builditbigger-141507.appspot.com/_ah/api/");
+
+
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
                     .setRootUrl("https://builditbigger-141507.appspot.com/_ah/api/");
+
             myApiService = builder.build();
         }
 
         context = params[0].first;
-        String name = params[0].second;
+        int index = params[0].second;
 
         try {
-            return myApiService.sayHi(name).execute().getData();
+//            return myApiService.tellJoke(joke).execute().getJokeString();
+            return myApiService.jokeCreate(index).execute().getData();
         } catch (IOException e) {
             return e.getMessage();
         }
