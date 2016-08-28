@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.example.JokeTeller;
 import com.example.joketelleractivity.JokeActivity;
 
+import java.util.Random;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,8 +23,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new EndpointsAsyncTask().execute(new Pair<Context, Integer>(this, 1));
-
 
     }
 
@@ -50,12 +50,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-        JokeTeller jokeTeller = new JokeTeller();
-        String msg = jokeTeller.tellJoke();
+//        JokeTeller jokeTeller = new JokeTeller();
+//        String msg = jokeTeller.tellJoke();
+        Random rand = new Random();
+        int i = rand.nextInt(5);
+        new EndpointsAsyncTask().execute(new Pair<Context, Integer>(this, i));
 //        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, JokeActivity.class);
-        intent.putExtra("JOKE", msg);
-        startActivity(intent);
+//        Intent intent = new Intent(this, JokeActivity.class);
+//        intent.putExtra("JOKE", msg);
+//        startActivity(intent);
     }
 
 

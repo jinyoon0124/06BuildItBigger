@@ -51,7 +51,7 @@ public class MyEndpoint {
     public MyBean jokeCreate(@Named("index") int i) {
         JokeTeller jokeTeller = new JokeTeller();
         MyBean response = new MyBean();
-        response.setData(jokeTeller.tellJoke() + " "+ String.valueOf(i));
+        response.setData(jokeTeller.tellJoke(i));
 
         return response;
     }
