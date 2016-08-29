@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 //        String msg = jokeTeller.tellJoke();
         Random rand = new Random();
         int i = rand.nextInt(5);
-        new EndpointsAsyncTask().execute(new Pair<Context, Integer>(this, i));
+        new EndpointsAsyncTask(this).execute(new Pair<Context, Integer>(this, i));
 //        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 //        Intent intent = new Intent(this, JokeActivity.class);
 //        intent.putExtra("JOKE", msg);
