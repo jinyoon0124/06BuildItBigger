@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
 
@@ -25,17 +26,38 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, Integer>, Void, String>
     private static MyApi myApiService = null;
     private Context context;
     private ProgressDialog progressDialog;
+    private JokeAsyncTaskListener mListener = null;
+    private Exception mError = null;
 
     public EndpointsAsyncTask(Context context) {
         this.context = context;
     }
 
+//    public EndpointsAsyncTask(){
+//        context = null;
+//    }
+    public EndpointsAsyncTask setListener(JokeAsyncTaskListener listener){
+        this.mListener = listener;
+        return this;
+    }
+
     @Override
     protected void onPreExecute() {
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setTitle("Please wait");
-        progressDialog.setMessage("Loading..");
-        progressDialog.show();
+        if(context!=null){
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setTitle("Please wait");
+            progressDialog.setMessage("Loading..");
+            progressDialog.show();
+        }
+
+    }
+
+    @Override
+    protected void onCancelled() {
+        if(this.mListener != null){
+            mError = new InterruptedException("AsyncTask cancelled");
+            this.mListener.onComplete(null, mError);
+        }
     }
 
     @Override
@@ -72,6 +94,7 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, Integer>, Void, String>
 //            return myApiService.tellJoke(joke).execute().getJokeString();
             return myApiService.jokeCreate(index).execute().getData();
         } catch (IOException e) {
+            mError = e;
             return e.getMessage();
         }
     }
@@ -79,10 +102,23 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, Integer>, Void, String>
     @Override
     protected void onPostExecute(String result) {
 //        Toast.makeText(context, result, Toast.LENGTH_LONG).show();
-        progressDialog.dismiss();
+//        progressDialog.dismiss();
+        if(this.mListener !=null){
+            this.mListener.onComplete(result, mError);
+        }
 
-        Intent intent = new Intent(context, JokeActivity.class);
-        intent.putExtra("JOKE", result);
-        context.startActivity(intent);
+//        Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+        Log.v("AYNC RESULT STRING", result);
+        if(context!=null){
+            Intent intent = new Intent(context, JokeActivity.class);
+            intent.putExtra("JOKE", result);
+            context.startActivity(intent);
+        }
+
+    }
+
+    public static interface JokeAsyncTaskListener{
+        public void onComplete(String joke, Exception e);
+
     }
 }

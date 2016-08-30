@@ -19,10 +19,13 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        new EndpointsAsyncTask(this).execute(new Pair<Context, Integer>(this, 0));
 
     }
 
@@ -55,10 +58,7 @@ public class MainActivity extends AppCompatActivity {
         Random rand = new Random();
         int i = rand.nextInt(5);
         new EndpointsAsyncTask(this).execute(new Pair<Context, Integer>(this, i));
-//        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-//        Intent intent = new Intent(this, JokeActivity.class);
-//        intent.putExtra("JOKE", msg);
-//        startActivity(intent);
+
     }
 
 
